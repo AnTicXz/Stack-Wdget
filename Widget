@@ -1,0 +1,108 @@
+import sys
+from PyQt5.QtGui import  *
+from PyQt5.QtWidgets import (QApplication, QPushButton, QLabel,
+                             QGridLayout, QHBoxLayout, QDialog, QButtonGroup,
+                             QTextBrowser, QLineEdit)
+
+class MyApp(QDialog): 
+    def __init__(self):
+        super().__init__()
+        self.title = 'PushPop'
+        self.initializeUI()
+        self.text = ""
+        self.stack = []
+        global length
+        length = len(self.stack)
+        #print(length)
+    def initializeUI(self):
+        #length = 0
+        
+        
+        
+        self.setWindowTitle(self.title)
+        self.number1 = QPushButton("Push")
+        self.number2 = QPushButton("Pop")
+        self.number3 = QPushButton("Clear")
+        self.TextB = QTextBrowser()
+        self.QLineEdit = QLineEdit()
+        self.QLineEdit.setStyleSheet('background-color: white')
+        self.label2 = QLabel('Size: ')
+        self.label2.setStyleSheet('background-color: white')
+        self.label3 = QLabel('Message: ')
+        self.label3.setStyleSheet('background-color: white')
+        
+        
+        layout = QGridLayout()
+        layout.addWidget(self.QLineEdit,0,0,1,6)
+        layout.addWidget(self.TextB,1,1,5,5)
+        layout.addWidget(self.number1,0,6)
+        layout.addWidget(self.number2,1,6)
+        layout.addWidget(self.number3,2,6)
+        layout.addWidget(self.label2,6,0,3,6)
+        layout.addWidget(self.label3,10,0,3,6)
+   
+    
+        self.setLayout(layout)
+    
+        self.PushPop = QButtonGroup()
+        
+        self.PushPop.addButton(self.number1)
+        self.PushPop.addButton(self.number2)
+        self.PushPop.addButton(self.number3)
+        
+        
+        self.PushPop.buttonClicked.connect(self.on_click)
+        
+        
+        
+        self.show()
+
+    def on_click(self,btn):
+       if (btn.text()) == "Push":
+           self.stack.append(self.QLineEdit.text())
+           temp = self.stack.copy()
+           temp.reverse()
+
+           #self.stack = self.stack[::-1]
+           
+           #self.TextB.append(self.QLineEdit.text())
+           self.TextB.clear()
+           for item in temp:
+               self.TextB.append(item)
+           
+           
+           self.label2.setText('Size: ' + str(len(self.stack)))
+           self.label3.setText("Pushed")
+       
+       elif len(self.stack) == 0:
+           pass
+       
+       elif (btn.text()) == "Pop":
+           self.stack.pop()
+           self.label2.setText('Size: ' + str(len(self.stack)))
+           self.label3.setText("Popped")
+       
+        
+           self.TextB.clear()
+           
+           temp = self.stack.copy()
+           temp.reverse()
+           for x in temp:
+               self.TextB.append(x)
+       
+       elif (btn.text()) == "Clear":
+           self.stack.clear()
+           self.TextB.clear()
+           self.label3.setText("Stack Cleared")
+           self.label2.setText('Size: ' + str(len(self.stack)))
+           
+           #self.TextB.append(stack)
+           #print(self.stack)
+           
+       
+   
+
+    
+app = QApplication(sys.argv)
+ex = MyApp()
+sys.exit(app.exec_())
